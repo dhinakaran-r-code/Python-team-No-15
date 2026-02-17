@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block title %}Reject Booking - CampusCRMS{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center mt-5">
+    <div class="col-md-6">
+        <div class="card shadow border-danger">
+            <div class="card-header bg-danger text-white">
+                <h4 class="mb-0">Reject Booking</h4>
+            </div>
+            <div class="card-body p-4">
+                <div class="alert alert-warning">
+                    <strong>Booking Details:</strong><br>
+                    Student: {{ booking.user.first_name }} {{ booking.user.last_name }}<br>
+                    Resource: {{ booking.resource.name }}<br>
+                    Date: {{ booking.booking_date }} ({{ booking.start_time }} - {{ booking.end_time }})
+                </div>
+
+                <form method="post">
+                    {% csrf_token %}
+
+                    {% for field in form %}
+                    <div class="mb-3">
+                        <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                        {{ field }}
+                        {% if field.errors %}
+                        <div class="text-danger small mt-1">
+                            {{ field.errors.0 }}
+                        </div>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-danger">Confirm Rejection</button>
+                        <a href="{% url 'dashboard' %}" class="btn btn-secondary">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

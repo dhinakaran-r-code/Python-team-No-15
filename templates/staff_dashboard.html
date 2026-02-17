@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block title %}Staff Dashboard - CampusCRMS{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col">
+            <h2 class="mb-4">Staff Dashboard <small class="text-muted">({{ department }})</small></h2>
+        </div>
+    </div>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-warning text-dark d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Pending Booking Requests</h5>
+            <span class="badge bg-light text-dark">{{ pending_bookings.count }}</span>
+        </div>
+        <div class="card-body">
+            {% if pending_bookings %}
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Student</th>
+                            <th>Resource</th>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for booking in pending_bookings %}
+                        <tr>
+                            <td>
+                                <strong>{{ booking.user.first_name }} {{ booking.user.last_name }}</strong><br>
+                                <small class="text-muted">Year {{ booking.user.student_profile.year }}</small>
+                            </td>
+                            <td>{{ booking.resource.name }}</td>
+                            <td>{{ booking.booking_date }}</td>
+                            <td>{{ booking.start_time }} - {{ booking.end_time }}</td>
+                            <td>
+                                <div class="btn-group" role="group">
+                                    <a href="{% url 'approve_booking' booking.id %}"
+                                        class="btn btn-sm btn-success">Approve</a>
+                                    <a href="{% url 'reject_booking' booking.id %}"
+                                        class="btn btn-sm btn-danger">Reject</a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <p class="text-muted mb-0">No pending booking requests from your department.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

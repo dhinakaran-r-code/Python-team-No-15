@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+
+{% block title %}Student Dashboard - CampusCRMS{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">My Dashboard</h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <a href="{% url 'book_resource' %}" class="btn btn-primary">
+            <i class="bi bi-plus-lg"></i> Book New Resource
+        </a>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Booking History -->
+    <div class="col-md-8">
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-white">
+                <h5 class="mb-0">My Bookings</h5>
+            </div>
+            <div class="card-body">
+                {% if bookings %}
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Resource</th>
+                                <th>Date</th>
+                                <th>Time</th>
+                                <th>Status</th>
+                                <th>Notes</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for booking in bookings %}
+                            <tr>
+                                <td>{{ booking.resource.name }}</td>
+                                <td>{{ booking.booking_date }}</td>
+                                <td>{{ booking.start_time }} - {{ booking.end_time }}</td>
+                                <td>
+                                    {% if booking.status == 'PENDING' %}
+                                    <span class="badge bg-warning text-dark">Pending</span>
+                                    {% elif booking.status == 'STAFF_APPROVED' %}
+                                    <span class="badge bg-info text-dark">Staff Approved</span>
+                                    <small class="d-block text-muted">Waiting for Admin</small>
+                                    {% elif booking.status == 'APPROVED' %}
+                                    <span class="badge bg-success">Approved</span>
+                                    {% elif booking.status == 'REJECTED' %}
+                                    <span class="badge bg-danger">Rejected</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if booking.rejection_reason %}
+                                    <span class="text-danger small">{{ booking.rejection_reason }}</span>
+                                    {% else %}
+                                    <span class="text-muted">-</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="text-center py-4">
+                    <p class="text-muted mb-3">You haven't made any booking requests yet.</p>
+                    <a href="{% url 'book_resource' %}" class="btn btn-outline-primary">Book Your First Resource</a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Available Resources Preview -->
+    <div class="col-md-4">
+        <div class="card shadow-sm">
+            <div class="card-header bg-white">
+                <h5 class="mb-0">Available Resources</h5>
+            </div>
+            <ul class="list-group list-group-flush">
+                {% for resource in resources|slice:":5" %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    {{ resource.name }}
+                    <span class="badge bg-secondary rounded-pill">{{ resource.get_type_display }}</span>
+                </li>
+                {% empty %}
+                <li class="list-group-item text-muted">No resources available.</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}

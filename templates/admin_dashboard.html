@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+
+{% block title %}Admin Dashboard - CampusCRMS{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">Admin Dashboard</h2>
+
+<!-- Stats Row -->
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card text-white bg-primary mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Total Students</h5>
+                <p class="card-text display-4">{{ total_students }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-success mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Total Staff</h5>
+                <p class="card-text display-4">{{ total_staff }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-info mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Resources</h5>
+                <p class="card-text display-4">{{ total_resources }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-warning mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Pending Staff Approvals</h5>
+                <p class="card-text display-4">{{ pending_bookings }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Pending Final Approval -->
+<div class="card shadow-sm mb-4">
+    <div class="card-header bg-danger text-white">
+        <h5 class="mb-0">Needs Final Approval (Staff Approved)</h5>
+    </div>
+    <div class="card-body">
+        {% if staff_approved_bookings %}
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Student</th>
+                        <th>Department</th>
+                        <th>Resource</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for booking in staff_approved_bookings %}
+                    <tr>
+                        <td>{{ booking.user.username }}</td>
+                        <td>{{ booking.user.student_profile.get_department_display }}</td>
+                        <td>{{ booking.resource.name }}</td>
+                        <td>{{ booking.booking_date }}</td>
+                        <td>{{ booking.start_time }} - {{ booking.end_time }}</td>
+                        <td>
+                            <a href="{% url 'approve_booking' booking.id %}" class="btn btn-sm btn-success">Final
+                                Approve</a>
+                            <a href="{% url 'reject_booking' booking.id %}" class="btn btn-sm btn-danger">Reject</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="text-muted">No bookings waiting for final approval.</p>
+        {% endif %}
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card mb-3">
+            <div class="card-header">Quick Actions</div>
+            <div class="card-body">
+                <a href="/admin/campus_app/resource/add/" class="btn btn-primary mb-2">Add New Resource</a>
+                <a href="{% url 'admin_book_resource' %}" class="btn btn-warning mb-2">Bulk Book Resource</a>
+                <a href="/admin/campus_app/user/add/" class="btn btn-secondary mb-2">Create New User</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
