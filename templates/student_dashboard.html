@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+
+{% block title %}Student Dashboard{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h2>Welcome, {{ user.get_full_name }}! 👋</h2>
+    <p style="color: #666; margin-top: 0.5rem;">
+        {{ profile.department.name }} - Year {{ profile.year }}
+        {% if profile.is_representative %}
+        <span class="badge badge-approved">Department Representative</span>
+        {% endif %}
+    </p>
+</div>
+
+<div class="card">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+        <h3>My Bookings</h3>
+        <a href="{% url 'create_booking' %}" class="btn">+ New Booking</a>
+    </div>
+    
+    {% if bookings %}
+    <table>
+        <thead>
+            <tr>
+                <th>Resource</th>
+                <th>Date</th>
+                <th>Time Slot</th>
+                <th>Status</th>
+                <th>Requested</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for booking in bookings %}
+            <tr>
+                <td>{{ booking.resource.name }}</td>
+                <td>{{ booking.booking_date }}</td>
+                <td>{{ booking.time_slot }}</td>
+                <td>
+                    <span class="badge badge-{{ booking.status|lower }}">{{ booking.status }}</span>
+                </td>
+                <td>{{ booking.created_at|date:"M d, Y" }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div class="empty-state">
+        <p>No bookings yet. Create your first booking!</p>
+    </div>
+    {% endif %}
+</div>
+
+<div class="card">
+    <h3 style="margin-bottom: 1.5rem;">Available Resources</h3>
+    
+    {% if resources %}
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Capacity</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for resource in resources %}
+            <tr>
+                <td>{{ resource.name }}</td>
+                <td>{{ resource.get_type_display }}</td>
+                <td>{{ resource.capacity }}</td>
+                <td><span class="badge badge-approved">{{ resource.status }}</span></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div class="empty-state">
+        <p>No resources available at the moment.</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

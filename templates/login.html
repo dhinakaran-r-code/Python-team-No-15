@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block title %}Login - Campus Resource Management{% endblock %}
+
+{% block content %}
+<div style="max-width: 400px; margin: 4rem auto;">
+    <div class="card">
+        <h2 style="text-align: center; color: #667eea; margin-bottom: 2rem;">Login</h2>
+        
+        <form method="post">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label>Email</label>
+                {{ form.username }}
+            </div>
+            
+            <div class="form-group">
+                <label>Password</label>
+                {{ form.password }}
+            </div>
+            
+            {% if form.errors %}
+            <div style="color: #e74c3c; margin-bottom: 1rem;">
+                Invalid credentials or inactive account
+            </div>
+            {% endif %}
+            
+            <button type="submit" class="btn" style="width: 100%;">Login</button>
+        </form>
+        
+        <p style="text-align: center; margin-top: 1.5rem; color: #666;">
+            Don't have an account? <a href="{% url 'register' %}" style="color: #667eea;">Register as Student</a>
+        </p>
+    </div>
+</div>
+{% endblock %}

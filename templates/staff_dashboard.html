@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+
+{% block title %}Staff Dashboard{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h2>Staff Dashboard - {{ profile.department.name }} 👨‍🏫</h2>
+    <p style="color: #666; margin-top: 0.5rem;">Manage students and bookings for your department</p>
+</div>
+
+<div class="card">
+    <h3 style="margin-bottom: 1.5rem;">Booking Requests</h3>
+    
+    {% if bookings %}
+    <table>
+        <thead>
+            <tr>
+                <th>Student</th>
+                <th>Resource</th>
+                <th>Date</th>
+                <th>Time Slot</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for booking in bookings %}
+            <tr>
+                <td>{{ booking.user.get_full_name }}</td>
+                <td>{{ booking.resource.name }}</td>
+                <td>{{ booking.booking_date }}</td>
+                <td>{{ booking.time_slot }}</td>
+                <td>
+                    <span class="badge badge-{{ booking.status|lower }}">{{ booking.status }}</span>
+                </td>
+                <td>
+                    {% if booking.status == 'PENDING' %}
+                    <a href="{% url 'approve_booking' booking.id %}" class="btn btn-success" style="padding: 0.5rem 1rem; font-size: 0.85rem;">Approve</a>
+                    <a href="{% url 'reject_booking' booking.id %}" class="btn btn-danger" style="padding: 0.5rem 1rem; font-size: 0.85rem;">Reject</a>
+                    {% else %}
+                    -
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div class="empty-state">
+        <p>No booking requests from your department.</p>
+    </div>
+    {% endif %}
+</div>
+
+<div class="card">
+    <h3 style="margin-bottom: 1.5rem;">Department Students</h3>
+    
+    {% if students %}
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Year</th>
+                <th>Representative</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for student in students %}
+            <tr>
+                <td>{{ student.user.get_full_name }}</td>
+                <td>{{ student.user.email }}</td>
+                <td>Year {{ student.year }}</td>
+                <td>
+                    {% if student.is_representative %}
+                    <span class="badge badge-approved">Yes</span>
+                    {% else %}
+                    -
+                    {% endif %}
+                </td>
+                <td>
+                    <span class="badge badge-{{ student.user.status|lower }}">{{ student.user.status }}</span>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div class="empty-state">
+        <p>No students in your department yet.</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

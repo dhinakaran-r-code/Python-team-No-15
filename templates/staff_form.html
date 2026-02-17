@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block title %}Add Staff{% endblock %}
+
+{% block content %}
+<div style="max-width: 600px; margin: 0 auto;">
+    <div class="card">
+        <h2 style="margin-bottom: 2rem;">Add Staff Member</h2>
+        
+        <form method="post">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label>First Name</label>
+                <input type="text" name="first_name" class="form-input" required>
+            </div>
+            
+            <div class="form-group">
+                <label>Last Name</label>
+                <input type="text" name="last_name" class="form-input" required>
+            </div>
+            
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" name="email" class="form-input" required>
+            </div>
+            
+            <div class="form-group">
+                <label>Phone</label>
+                <input type="text" name="phone" class="form-input" required>
+            </div>
+            
+            <div class="form-group">
+                <label>Department</label>
+                {{ form.department }}
+            </div>
+            
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" name="password" class="form-input" required>
+            </div>
+            
+            {% if form.errors %}
+            <div style="color: #e74c3c; margin-bottom: 1rem;">
+                {{ form.errors }}
+            </div>
+            {% endif %}
+            
+            <div style="display: flex; gap: 1rem;">
+                <button type="submit" class="btn">Create Staff</button>
+                <a href="{% url 'admin_dashboard' %}" class="btn" style="background: #95a5a6;">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

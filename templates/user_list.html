@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block title %}Manage Users{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h2 style="margin-bottom: 1.5rem;">Manage Users</h2>
+    
+    {% if users %}
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Status</th>
+                <th>Created</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+            <tr>
+                <td>{{ user.get_full_name }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.get_role_display }}</td>
+                <td>
+                    <span class="badge badge-{{ user.status|lower }}">{{ user.status }}</span>
+                </td>
+                <td>{{ user.created_at|date:"M d, Y" }}</td>
+                <td>
+                    <a href="{% url 'toggle_user_status' user.id %}" class="btn" style="padding: 0.5rem 1rem; font-size: 0.85rem;">
+                        {% if user.status == 'ACTIVE' %}Deactivate{% else %}Activate{% endif %}
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div class="empty-state">
+        <p>No users yet.</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

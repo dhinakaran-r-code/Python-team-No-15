@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h2>Admin Dashboard 👨💼</h2>
+    <p style="color: #666; margin-top: 0.5rem;">Complete system control and analytics</p>
+</div>
+
+<div class="stats-grid">
+    <div class="stat-card">
+        <h3>{{ stats.total_students }}</h3>
+        <p>Total Students</p>
+    </div>
+    <div class="stat-card">
+        <h3>{{ stats.total_staff }}</h3>
+        <p>Total Staff</p>
+    </div>
+    <div class="stat-card">
+        <h3>{{ stats.total_resources }}</h3>
+        <p>Total Resources</p>
+    </div>
+    <div class="stat-card">
+        <h3>{{ stats.available_resources }}</h3>
+        <p>Available Resources</p>
+    </div>
+    <div class="stat-card">
+        <h3>{{ stats.pending_bookings }}</h3>
+        <p>Pending Bookings</p>
+    </div>
+    <div class="stat-card">
+        <h3>{{ stats.approved_bookings }}</h3>
+        <p>Approved Bookings</p>
+    </div>
+</div>
+
+<div class="card">
+    <h3 style="margin-bottom: 1.5rem;">Quick Actions</h3>
+    <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+        <a href="{% url 'create_department' %}" class="btn">+ Add Department</a>
+        <a href="{% url 'create_staff' %}" class="btn">+ Add Staff</a>
+        <a href="{% url 'create_resource' %}" class="btn">+ Add Resource</a>
+        <a href="{% url 'manage_users' %}" class="btn">Manage Users</a>
+    </div>
+</div>
+
+<div class="card">
+    <h3 style="margin-bottom: 1.5rem;">Recent Bookings</h3>
+    
+    {% if recent_bookings %}
+    <table>
+        <thead>
+            <tr>
+                <th>Student</th>
+                <th>Resource</th>
+                <th>Date</th>
+                <th>Time Slot</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for booking in recent_bookings %}
+            <tr>
+                <td>{{ booking.user.get_full_name }}</td>
+                <td>{{ booking.resource.name }}</td>
+                <td>{{ booking.booking_date }}</td>
+                <td>{{ booking.time_slot }}</td>
+                <td>
+                    <span class="badge badge-{{ booking.status|lower }}">{{ booking.status }}</span>
+                </td>
+                <td>
+                    {% if booking.status == 'PENDING' %}
+                    <a href="{% url 'approve_booking' booking.id %}" class="btn btn-success" style="padding: 0.5rem 1rem; font-size: 0.85rem;">Approve</a>
+                    <a href="{% url 'reject_booking' booking.id %}" class="btn btn-danger" style="padding: 0.5rem 1rem; font-size: 0.85rem;">Reject</a>
+                    {% else %}
+                    -
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div class="empty-state">
+        <p>No bookings yet.</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
