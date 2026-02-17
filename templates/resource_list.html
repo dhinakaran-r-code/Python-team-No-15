@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block title %}Manage Resources{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+        <h2>Manage Resources</h2>
+        <a href="{% url 'create_resource' %}" class="btn">+ Add Resource</a>
+    </div>
+    
+    {% if resources %}
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Capacity</th>
+                <th>Status</th>
+                <th>Created</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for resource in resources %}
+            <tr>
+                <td>{{ resource.name }}</td>
+                <td>{{ resource.get_type_display }}</td>
+                <td>{{ resource.capacity }}</td>
+                <td>
+                    <span class="badge badge-{% if resource.status == 'AVAILABLE' %}approved{% else %}pending{% endif %}">
+                        {{ resource.status }}
+                    </span>
+                </td>
+                <td>{{ resource.created_at|date:"M d, Y" }}</td>
+                <td>
+                    <a href="{% url 'edit_resource' resource.id %}" class="btn" style="padding: 0.5rem 1rem; font-size: 0.85rem;">Edit</a>
+                    <a href="{% url 'delete_resource' resource.id %}" class="btn btn-danger" style="padding: 0.5rem 1rem; font-size: 0.85rem;" onclick="return confirm('Delete this resource?')">Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div class="empty-state">
+        <p>No resources yet. Add your first resource!</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

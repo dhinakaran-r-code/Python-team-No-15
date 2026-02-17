@@ -1,0 +1,190 @@
+{
+  "info": {
+    "name": "Campus Resource Management API",
+    "description": "Backend Challenge 2026 - Complete API Collection",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "User Management",
+      "item": [
+        {
+          "name": "Create User",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"first_name\": \"John\",\n  \"last_name\": \"Doe\",\n  \"email\": \"john@example.com\",\n  \"phone\": \"1234567890\",\n  \"role\": \"STUDENT\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {"raw": "http://localhost:8000/api/users/create/", "protocol": "http", "host": ["localhost"], "port": "8000", "path": ["api", "users", "create", ""]}
+          }
+        },
+        {
+          "name": "Get All Users",
+          "request": {
+            "method": "GET",
+            "url": {"raw": "http://localhost:8000/api/users/", "protocol": "http", "host": ["localhost"], "port": "8000", "path": ["api", "users", ""]}
+          }
+        },
+        {
+          "name": "Get All Active Users",
+          "request": {
+            "method": "GET",
+            "url": {"raw": "http://localhost:8000/api/users/?status=ACTIVE", "protocol": "http", "host": ["localhost"], "port": "8000", "path": ["api", "users", ""], "query": [{"key": "status", "value": "ACTIVE"}]}
+          }
+        },
+        {
+          "name": "Get User by ID",
+          "request": {
+            "method": "GET",
+            "url": {"raw": "http://localhost:8000/api/users/1/", "protocol": "http", "host": ["localhost"], "port": "8000", "path": ["api", "users", "1", ""]}
+          }
+        },
+        {
+          "name": "Update User",
+          "request": {
+            "method": "PATCH",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phone\": \"9876543210\"\n}"
+            },
+            "url": {"raw": "http://localhost:8000/api/users/1/update/", "protocol": "http", "host": ["localhost"], "port": "8000", "path": ["api", "users", "1", "update", ""]}
+          }
+        },
+        {
+          "name": "Delete User",
+          "request": {
+            "method": "DELETE",
+            "url": {"raw": "http://localhost:8000/api/users/1/delete/", "protocol": "http", "host": ["localhost"], "port": "8000", "path": ["api", "users", "1", "delete", ""]}
+          }
+        }
+      ]
+    },
+    {
+      "name": "Resource Management",
+      "item": [
+        {
+          "name": "Create Resource",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Computer Lab 1\",\n  \"type\": \"LAB\",\n  \"capacity\": 60,\n  \"status\": \"AVAILABLE\"\n}"
+            },
+            "url": {"raw": "http://localhost:8000/api/resources/create/", "protocol": "http", "host": ["localhost"], "port": "8000", "path": ["api", "resources", "create", ""]}
+          }
+        },
+        {
+          "name": "Get All Resources",
+          "request": {
+            "method": "GET",
+            "url": {"raw": "http://localhost:8000/api/resources/", "protocol": "http", "host": ["localhost"], "port": "8000", "path": ["api", "resources", ""]}
+          }
+        },
+        {
+          "name": "Get Resource by ID",
+          "request": {
+            "method": "GET",
+            "url": {"raw": "http://localhost:8000/api/resources/1/", "protocol": "http", "host": ["localhost"], "port": "8000", "path": ["api", "resources", "1", ""]}
+          }
+        },
+        {
+          "name": "Update Resource",
+          "request": {
+            "method": "PATCH",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"UNAVAILABLE\"\n}"
+            },
+            "url": {"raw": "http://localhost:8000/api/resources/1/update/", "protocol": "http", "host": ["localhost"], "port": "8000", "path": ["api", "resources", "1", "update", ""]}
+          }
+        },
+        {
+          "name": "Delete Resource",
+          "request": {
+            "method": "DELETE",
+            "url": {"raw": "http://localhost:8000/api/resources/1/delete/", "protocol": "http", "host": ["localhost"], "port": "8000", "path": ["api", "resources", "1", "delete", ""]}
+          }
+        }
+      ]
+    },
+    {
+      "name": "Booking Management",
+      "item": [
+        {
+          "name": "Create Booking",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"user\": 1,\n  \"resource\": 1,\n  \"booking_date\": \"2024-12-25\",\n  \"time_slot\": \"09:00-10:00\"\n}"
+            },
+            "url": {"raw": "http://localhost:8000/api/bookings/create/", "protocol": "http", "host": ["localhost"], "port": "8000", "path": ["api", "bookings", "create", ""]}
+          }
+        },
+        {
+          "name": "Create Duplicate Booking (Should Fail)",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"user\": 1,\n  \"resource\": 1,\n  \"booking_date\": \"2024-12-25\",\n  \"time_slot\": \"09:00-10:00\"\n}"
+            },
+            "url": {"raw": "http://localhost:8000/api/bookings/create/", "protocol": "http", "host": ["localhost"], "port": "8000", "path": ["api", "bookings", "create", ""]}
+          }
+        },
+        {
+          "name": "Get All Bookings",
+          "request": {
+            "method": "GET",
+            "url": {"raw": "http://localhost:8000/api/bookings/", "protocol": "http", "host": ["localhost"], "port": "8000", "path": ["api", "bookings", ""]}
+          }
+        },
+        {
+          "name": "Get Booking by ID",
+          "request": {
+            "method": "GET",
+            "url": {"raw": "http://localhost:8000/api/bookings/1/", "protocol": "http", "host": ["localhost"], "port": "8000", "path": ["api", "bookings", "1", ""]}
+          }
+        },
+        {
+          "name": "Approve Booking",
+          "request": {
+            "method": "PATCH",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"APPROVED\"\n}"
+            },
+            "url": {"raw": "http://localhost:8000/api/bookings/1/status/", "protocol": "http", "host": ["localhost"], "port": "8000", "path": ["api", "bookings", "1", "status", ""]}
+          }
+        },
+        {
+          "name": "Reject Booking",
+          "request": {
+            "method": "PATCH",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"REJECTED\"\n}"
+            },
+            "url": {"raw": "http://localhost:8000/api/bookings/1/status/", "protocol": "http", "host": ["localhost"], "port": "8000", "path": ["api", "bookings", "1", "status", ""]}
+          }
+        },
+        {
+          "name": "Delete Booking",
+          "request": {
+            "method": "DELETE",
+            "url": {"raw": "http://localhost:8000/api/bookings/1/delete/", "protocol": "http", "host": ["localhost"], "port": "8000", "path": ["api", "bookings", "1", "delete", ""]}
+          }
+        }
+      ]
+    }
+  ]
+}

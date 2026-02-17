@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ action }} Resource{% endblock %}
+
+{% block content %}
+<div style="max-width: 600px; margin: 0 auto;">
+    <div class="card">
+        <h2 style="margin-bottom: 2rem;">{{ action }} Resource</h2>
+        
+        <form method="post">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label>Name</label>
+                {{ form.name }}
+            </div>
+            
+            <div class="form-group">
+                <label>Type</label>
+                {{ form.type }}
+            </div>
+            
+            <div class="form-group">
+                <label>Capacity</label>
+                {{ form.capacity }}
+            </div>
+            
+            <div class="form-group">
+                <label>Status</label>
+                {{ form.status }}
+            </div>
+            
+            {% if form.errors %}
+            <div style="color: #e74c3c; margin-bottom: 1rem;">
+                {{ form.errors }}
+            </div>
+            {% endif %}
+            
+            <div style="display: flex; gap: 1rem;">
+                <button type="submit" class="btn">Save Resource</button>
+                <a href="{% url 'manage_resources' %}" class="btn" style="background: #95a5a6;">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

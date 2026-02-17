@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block title %}Manage Departments{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+        <h2>Manage Departments</h2>
+        <a href="{% url 'create_department' %}" class="btn">+ Add Department</a>
+    </div>
+    
+    {% if departments %}
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Code</th>
+                <th>Students</th>
+                <th>Staff</th>
+                <th>Created</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for dept in departments %}
+            <tr>
+                <td>{{ dept.name }}</td>
+                <td>{{ dept.code }}</td>
+                <td>{{ dept.students.count }}</td>
+                <td>
+                    {% if dept.staff %}
+                    {{ dept.staff.user.get_full_name }}
+                    {% else %}
+                    <span style="color: #999;">No staff assigned</span>
+                    {% endif %}
+                </td>
+                <td>{{ dept.created_at|date:"M d, Y" }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div class="empty-state">
+        <p>No departments yet. Add your first department!</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
