@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ department_label }} - {{ year }} Year Faculty Advisor{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h2>{{ department_label }} - {{ year }}{% if year == 1 %}st{% elif year == 2 %}nd{% elif year == 3 %}rd{%
+                else %}th{% endif %} Year Faculty Advisor</h2>
+        </div>
+        <div class="col-md-4 text-end">
+            <a href="{% url 'admin_add_staff' %}" class="btn btn-primary">Add Faculty Advisor</a>
+            <a href="{% url 'admin_staff_years' department_code %}" class="btn btn-secondary">Back to Years</a>
+        </div>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            {% if staff_members %}
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Name</th>
+                            <th>Role</th>
+                            <th>Email</th>
+                            <th>Department</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for staff in staff_members %}
+                        <tr>
+                            <td><strong>{{ staff.first_name }} {{ staff.last_name }}</strong></td>
+                            <td><span class="badge bg-success">Faculty Advisor</span></td>
+                            <td>{{ staff.email }}</td>
+                            <td>{{ department_label }}</td>
+                            <td>
+                                <a href="#" class="btn btn-sm btn-outline-primary">View Profile</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="text-center py-5">
+                <p class="lead text-muted">No Faculty Advisor assigned for {{ department_label }} - {{ year }} Year.</p>
+                <a href="{% url 'admin_add_staff' %}" class="btn btn-outline-primary">Assign Advisor</a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -4,9 +4,14 @@
 
 {% block content %}
 <div class="container-fluid">
-    <div class="row mb-4">
+    <div class="row mb-4 align-items-center">
         <div class="col">
-            <h2 class="mb-4">Staff Dashboard <small class="text-muted">({{ department }})</small></h2>
+            <h2 class="mb-0">Staff Dashboard <small class="text-muted fs-5">({{ department }})</small></h2>
+        </div>
+        <div class="col-auto">
+            <a href="{% url 'staff_book_resource' %}" class="btn btn-success">
+                <i class="bi bi-plus-lg me-2"></i>Book Resource
+            </a>
         </div>
     </div>
 
@@ -53,6 +58,66 @@
             </div>
             {% else %}
             <p class="text-muted mb-0">No pending booking requests from your department.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Booking History Section -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-secondary text-white d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Booking History</h5>
+        </div>
+        <div class="card-body">
+            {% if history_bookings %}
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Student</th>
+                            <th>Resource</th>
+                            <th>Date & Time</th>
+                            <th>Status</th>
+                            <th>Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for booking in history_bookings %}
+                        <tr>
+                            <td>
+                                <strong>{{ booking.user.first_name }} {{ booking.user.last_name }}</strong><br>
+                                <small class="text-muted">Year {{ booking.user.student_profile.year }}</small>
+                            </td>
+                            <td>{{ booking.resource.name }}</td>
+                            <td>
+                                {{ booking.booking_date }}<br>
+                                <small class="text-muted">{{ booking.start_time }} - {{ booking.end_time }}</small>
+                            </td>
+                            <td>
+                                {% if booking.status == 'APPROVED' %}
+                                <span class="badge bg-success">Approved</span>
+                                {% elif booking.status == 'STAFF_APPROVED' %}
+                                <span class="badge bg-info text-dark">Staff Approved</span>
+                                {% elif booking.status == 'REJECTED' %}
+                                <span class="badge bg-danger">Rejected</span>
+                                {% else %}
+                                <span class="badge bg-secondary">{{ booking.get_status_display }}</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if booking.rejection_reason %}
+                                <span class="text-danger"><small><strong>Reason:</strong> {{ booking.rejection_reason
+                                        }}</small></span>
+                                {% else %}
+                                <span class="text-muted">-</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <p class="text-muted mb-0">No booking history available.</p>
             {% endif %}
         </div>
     </div>

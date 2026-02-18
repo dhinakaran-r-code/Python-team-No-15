@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ department_label }} - {{ year }} Year Students{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h2>{{ department_label }} - {{ year }}{% if year == 1 %}st{% elif year == 2 %}nd{% elif year == 3 %}rd{%
+                else %}th{% endif %} Year Students</h2>
+        </div>
+        <div class="col-md-4 text-end">
+            <a href="{% url 'admin_add_student' %}" class="btn btn-primary">Add New Student</a>
+            <a href="{% url 'admin_student_years' department_code %}" class="btn btn-secondary">Back to Years</a>
+        </div>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            {% if students %}
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Username</th>
+                            <th>Full Name</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for student in students %}
+                        <tr {% if student.student_profile.is_representative %}class="table-info" {% endif %}>
+                            <td>
+                                {{ student.username }}
+                                {% if student.student_profile.is_representative %}
+                                <span class="badge bg-primary ms-2">Class Rep</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ student.first_name }} {{ student.last_name }}</td>
+                            <td>{{ student.email }}</td>
+                            <td>{{ student.role|title }}</td>
+                            <td>
+                                <a href="#" class="btn btn-sm btn-outline-primary">View</a>
+                                <a href="#" class="btn btn-sm btn-outline-danger">Edit</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="text-center py-5">
+                <p class="lead text-muted">No students found for {{ department_label }} - {{ year }} Year.</p>
+                <a href="{% url 'admin_add_student' %}" class="btn btn-outline-primary">Add Student</a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

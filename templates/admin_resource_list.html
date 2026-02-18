@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block title %}All Resources - Admin Panel{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h2>All Resources</h2>
+        </div>
+        <div class="col-md-4 text-end">
+            <a href="{% url 'admin_add_resource' %}" class="btn btn-primary">Add New Resource</a>
+            <a href="{% url 'admin_dashboard' %}" class="btn btn-secondary">Back to Dashboard</a>
+        </div>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            {% if resources %}
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Name</th>
+                            <th>Type</th>
+                            <th>Capacity</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for resource in resources %}
+                        <tr>
+                            <td><strong>{{ resource.name }}</strong></td>
+                            <td>{{ resource.get_type_display }}</td>
+                            <td>{{ resource.capacity }}</td>
+                            <td>
+                                {% if resource.status == 'AVAILABLE' %}
+                                <span class="badge bg-success">Available</span>
+                                {% elif resource.status == 'UNAVAILABLE' %}
+                                <span class="badge bg-danger">Unavailable</span>
+                                {% else %}
+                                <span class="badge bg-warning text-dark">{{ resource.get_status_display }}</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <p class="text-muted text-center py-4">No resources found.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

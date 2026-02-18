@@ -3,95 +3,201 @@
 {% block title %}Admin Dashboard - CampusCRMS{% endblock %}
 
 {% block content %}
-<h2 class="mb-4">Admin Dashboard</h2>
+<div class="d-flex justify-content-between align-items-center mb-5">
+    <div>
+        <h2 class="fw-bold mb-1">Dashboard</h2>
+        <p class="text-muted mb-0">Overview of campus resources and activities</p>
+    </div>
+    <div class="date-badge bg-white px-3 py-2 rounded-pill shadow-sm">
+        <i class="bi bi-calendar-event me-2 text-primary"></i>
+        <span class="fw-bold text-dark">{% now "F j, Y" %}</span>
+    </div>
+</div>
 
 <!-- Stats Row -->
-<div class="row mb-4">
+<div class="row g-4 mb-5">
     <div class="col-md-3">
-        <div class="card text-white bg-primary mb-3">
-            <div class="card-body">
-                <h5 class="card-title">Total Students</h5>
-                <p class="card-text display-4">{{ total_students }}</p>
+        <a href="{% url 'admin_student_departments' %}" class="text-decoration-none">
+            <div class="card stat-card h-100 border-0">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <p class="text-muted small text-uppercase fw-bold mb-1">Total Students</p>
+                            <h3 class="display-6 fw-bold text-dark mb-0 d-flex align-items-baseline">
+                                {{ total_students }}
+                                <span class="fs-6 text-success ms-2"><i class="bi bi-arrow-up-short"></i></span>
+                            </h3>
+                        </div>
+                        <div class="icon-circle bg-primary bg-opacity-10 text-primary p-3 rounded-circle">
+                            <i class="bi bi-people-fill fs-4"></i>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
+        </a>
     </div>
     <div class="col-md-3">
-        <div class="card text-white bg-success mb-3">
-            <div class="card-body">
-                <h5 class="card-title">Total Staff</h5>
-                <p class="card-text display-4">{{ total_staff }}</p>
+        <a href="{% url 'admin_staff_departments' %}" class="text-decoration-none">
+            <div class="card stat-card h-100 border-0">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <p class="text-muted small text-uppercase fw-bold mb-1">Total Staff</p>
+                            <h3 class="display-6 fw-bold text-dark mb-0">{{ total_staff }}</h3>
+                        </div>
+                        <div class="icon-circle bg-success bg-opacity-10 text-success p-3 rounded-circle">
+                            <i class="bi bi-person-badge-fill fs-4"></i>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
+        </a>
     </div>
     <div class="col-md-3">
-        <div class="card text-white bg-info mb-3">
-            <div class="card-body">
-                <h5 class="card-title">Resources</h5>
-                <p class="card-text display-4">{{ total_resources }}</p>
+        <a href="{% url 'admin_resource_list' %}" class="text-decoration-none">
+            <div class="card stat-card h-100 border-0">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <p class="text-muted small text-uppercase fw-bold mb-1">Resources</p>
+                            <h3 class="display-6 fw-bold text-dark mb-0">{{ total_resources }}</h3>
+                        </div>
+                        <div class="icon-circle bg-info bg-opacity-10 text-info p-3 rounded-circle">
+                            <i class="bi bi-pc-display fs-4"></i>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
+        </a>
     </div>
     <div class="col-md-3">
-        <div class="card text-white bg-warning mb-3">
-            <div class="card-body">
-                <h5 class="card-title">Pending Staff Approvals</h5>
-                <p class="card-text display-4">{{ pending_bookings }}</p>
+        <a href="{% url 'admin_booking_list' %}?status=PENDING" class="text-decoration-none">
+            <div class="card stat-card h-100 border-0 position-relative overflow-hidden">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <p class="text-muted small text-uppercase fw-bold mb-1">Pending Actions</p>
+                            <h3 class="display-6 fw-bold text-dark mb-0">{{ pending_bookings }}</h3>
+                        </div>
+                        <div class="icon-circle bg-warning bg-opacity-10 text-warning p-3 rounded-circle">
+                            <i class="bi bi-ui-checks fs-4"></i>
+                        </div>
+                    </div>
+                </div>
+                {% if pending_bookings > 0 %}
+                <div class="position-absolute bottom-0 start-0 w-100 bg-warning py-1"></div>
+                {% endif %}
             </div>
-        </div>
+        </a>
     </div>
 </div>
 
-<!-- Pending Final Approval -->
-<div class="card shadow-sm mb-4">
-    <div class="card-header bg-danger text-white">
-        <h5 class="mb-0">Needs Final Approval (Staff Approved)</h5>
-    </div>
-    <div class="card-body">
-        {% if staff_approved_bookings %}
-        <div class="table-responsive">
-            <table class="table table-hover">
-                <thead>
-                    <tr>
-                        <th>Student</th>
-                        <th>Department</th>
-                        <th>Resource</th>
-                        <th>Date</th>
-                        <th>Time</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
+<div class="row g-4">
+    <!-- Pending Final Approval -->
+    <div class="col-lg-8">
+        <div class="card h-100 shadow-sm border-0">
+            <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center border-bottom-0">
+                <h5 class="mb-0 fw-bold"><i class="bi bi-hourglass-split me-2 text-warning"></i>Needs Final Approval
+                </h5>
+                <span class="badge bg-soft-warning text-warning border border-warning">Staff Approved</span>
+            </div>
+            <div class="card-body p-0">
+                {% if staff_approved_bookings %}
+                <div class="list-group list-group-flush">
                     {% for booking in staff_approved_bookings %}
-                    <tr>
-                        <td>{{ booking.user.username }}</td>
-                        <td>{{ booking.user.student_profile.get_department_display }}</td>
-                        <td>{{ booking.resource.name }}</td>
-                        <td>{{ booking.booking_date }}</td>
-                        <td>{{ booking.start_time }} - {{ booking.end_time }}</td>
-                        <td>
-                            <a href="{% url 'approve_booking' booking.id %}" class="btn btn-sm btn-success">Final
-                                Approve</a>
-                            <a href="{% url 'reject_booking' booking.id %}" class="btn btn-sm btn-danger">Reject</a>
-                        </td>
-                    </tr>
+                    <div class="list-group-item p-4 border-bottom">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="d-flex align-items-center">
+                                <div class="bg-primary bg-opacity-10 text-primary rounded-circle p-3 me-3 d-flex align-items-center justify-content-center"
+                                    style="width: 50px; height: 50px;">
+                                    <i class="bi bi-person-fill fs-5"></i>
+                                </div>
+                                <div>
+                                    <h6 class="mb-1 fw-bold text-dark">Staff ID: {{ booking.user.username }}</h6>
+                                    <div class="text-muted small">
+                                        <i class="bi bi-calendar-event me-1"></i> Date: {{ booking.booking_date }}
+                                    </div>
+                                    <div class="text-muted small">
+                                        <i class="bi bi-clock me-1"></i> Time: {{ booking.start_time|time:"g i a" }} -
+                                        {{ booking.end_time|time:"g i a" }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex gap-2">
+                                <a href="{% url 'approve_booking' booking.id %}"
+                                    class="btn btn-success btn-sm px-3 shadow-sm d-flex align-items-center">
+                                    <i class="bi bi-check-lg me-2"></i> Approve
+                                </a>
+                                <a href="{% url 'reject_booking' booking.id %}"
+                                    class="btn btn-outline-danger btn-sm px-3 d-flex align-items-center">
+                                    <i class="bi bi-x-lg me-2"></i> Reject
+                                </a>
+                            </div>
+                        </div>
+                    </div>
                     {% endfor %}
-                </tbody>
-            </table>
+                </div>
+                {% else %}
+                <div class="text-center py-5">
+                    <div class="mb-3 text-muted opacity-25">
+                        <i class="bi bi-check-circle-fill display-1"></i>
+                    </div>
+                    <h5 class="text-muted">All Caught Up!</h5>
+                    <p class="text-muted small">No bookings waiting for final approval.</p>
+                </div>
+                {% endif %}
+            </div>
         </div>
-        {% else %}
-        <p class="text-muted">No bookings waiting for final approval.</p>
-        {% endif %}
     </div>
-</div>
 
-<div class="row">
-    <div class="col-md-6">
-        <div class="card mb-3">
-            <div class="card-header">Quick Actions</div>
+    <!-- Quick Actions -->
+    <div class="col-lg-4">
+        <div class="card h-100">
+            <div class="card-header bg-transparent py-3">
+                <h5 class="mb-0 fw-bold"><i class="bi bi-lightning-charge me-2 text-primary"></i>Quick Actions</h5>
+            </div>
             <div class="card-body">
-                <a href="/admin/campus_app/resource/add/" class="btn btn-primary mb-2">Add New Resource</a>
-                <a href="{% url 'admin_book_resource' %}" class="btn btn-warning mb-2">Bulk Book Resource</a>
-                <a href="/admin/campus_app/user/add/" class="btn btn-secondary mb-2">Create New User</a>
+                <div class="d-grid gap-3">
+                    <a href="{% url 'admin_add_resource' %}" class="btn btn-outline-primary text-start p-3 hover-scale">
+                        <div class="d-flex align-items-center">
+                            <div class="bg-primary text-white rounded p-2 me-3"><i class="bi bi-plus-lg"></i></div>
+                            <div>
+                                <h6 class="mb-0 fw-bold">Add Resource</h6>
+                                <small class="text-muted">Create new lab or equipment</small>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="{% url 'admin_book_resource' %}"
+                        class="btn btn-outline-warning text-start p-3 hover-scale">
+                        <div class="d-flex align-items-center">
+                            <div class="bg-warning text-white rounded p-2 me-3"><i class="bi bi-calendar-check"></i>
+                            </div>
+                            <div>
+                                <h6 class="mb-0 text-dark fw-bold">Bulk Booking</h6>
+                                <small class="text-muted">Book for multiple days</small>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="{% url 'admin_add_staff' %}" class="btn btn-outline-secondary text-start p-3 hover-scale">
+                        <div class="d-flex align-items-center">
+                            <div class="bg-secondary text-white rounded p-2 me-3"><i class="bi bi-person-plus"></i>
+                            </div>
+                            <div>
+                                <h6 class="mb-0 text-dark fw-bold">Add Staff</h6>
+                                <small class="text-muted">Register new staff member</small>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="{% url 'admin_add_student' %}" class="btn btn-outline-info text-start p-3 hover-scale">
+                        <div class="d-flex align-items-center">
+                            <div class="bg-info text-white rounded p-2 me-3"><i class="bi bi-person-badge"></i></div>
+                            <div>
+                                <h6 class="mb-0 text-dark fw-bold">Add Student</h6>
+                                <small class="text-muted">Register new student</small>
+                            </div>
+                        </div>
+                    </a>
+                </div>
             </div>
         </div>
     </div>

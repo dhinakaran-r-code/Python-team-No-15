@@ -65,10 +65,11 @@ class User(AbstractUser):
 
 class StaffProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='staff_profile')
-    department = models.CharField(max_length=10, choices=Department.choices, unique=True) # One staff per department
+    department = models.CharField(max_length=10, choices=Department.choices) # Removed unique=True
+    year = models.IntegerField(choices=[(1, '1st Year'), (2, '2nd Year'), (3, '3rd Year'), (4, '4th Year')], default=1)
 
     def __str__(self):
-        return f"{self.user.username} - {self.department} Staff"
+        return f"{self.user.username} - {self.department} Staff ({self.year} Year)"
 
 class StudentProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='student_profile')
@@ -81,10 +82,11 @@ class StudentProfile(models.Model):
         if self.is_representative:
             existing_rep = StudentProfile.objects.filter(
                 department=self.department, 
+                year=self.year,
                 is_representative=True
             ).exclude(pk=self.pk).exists()
             if existing_rep:
-                raise ValidationError(f"A representative already exists for {self.department}.")
+                raise ValidationError(f"A representative already exists for {self.department} Year {self.year}.")
 
     def save(self, *args, **kwargs):
         self.clean()
@@ -111,8 +113,9 @@ class Resource(models.Model):
 
 class Booking(models.Model):
     STATUS_CHOICES = [
-        ('PENDING', 'Pending'),
-        ('STAFF_APPROVED', 'Staff Approved'), # Approved by Staff, pending Admin
+        ('PENDING_REP', 'Pending Class Rep'), # Initial for Students
+        ('PENDING_STAFF', 'Pending Faculty Advisor'), # Approved by Rep / Initial for Rep
+        ('STAFF_APPROVED', 'Pending Admin'), # Approved by Staff
         ('APPROVED', 'Approved'),             # Final Approval by Admin
         ('REJECTED', 'Rejected'),
     ]
@@ -139,10 +142,21 @@ class Booking(models.Model):
             if self.start_time >= self.end_time:
                 raise ValidationError("End time must be after start time.")
             
-            campus_start = timezone.datetime.strptime("09:00", "%H:%M").time()
-            campus_end = timezone.datetime.strptime("16:00", "%H:%M").time()
+            # Ensure we are comparing time objects
+            import datetime
+            booking_start = self.start_time
+            booking_end = self.end_time
+
+            # If they are strings (which can happen before full_clean), parse them
+            if isinstance(booking_start, str):
+                booking_start = datetime.datetime.strptime(booking_start, "%H:%M:%S" if len(booking_start.split(':'))==3 else "%H:%M").time()
+            if isinstance(booking_end, str):
+                booking_end = datetime.datetime.strptime(booking_end, "%H:%M:%S" if len(booking_end.split(':'))==3 else "%H:%M").time()
+
+            campus_start = datetime.datetime.strptime("09:00", "%H:%M").time()
+            campus_end = datetime.datetime.strptime("16:00", "%H:%M").time()
             
-            if self.start_time < campus_start or self.end_time > campus_end:
+            if booking_start < campus_start or booking_end > campus_end:
                  raise ValidationError("Bookings are only allowed between 9:00 AM and 4:00 PM.")
 
         # Overlap Validation

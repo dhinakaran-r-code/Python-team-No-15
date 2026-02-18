@@ -1,0 +1,16 @@
+File: templates\admin_booking_list.html
+  Line 52: <small class="text-muted">{{ booking.user.student_profile.get_department_display
+    Next: }}</small>
+
+File: templates\admin_dashboard.html
+  Line 121: <td><span class="badge bg-secondary opacity-75">{{
+    Next: booking.user.student_profile.get_department_display }}</span></td>
+
+File: templates\staff_dashboard.html
+  Line 103: <span class="text-danger"><small><strong>Reason:</strong> {{ booking.rejection_reason
+    Next: }}</small></span>
+
+File: templates\student_dashboard.html
+  Line 16: <span class="badge bg-soft-primary text-primary border border-primary mb-2">{{
+    Next: student_profile.get_department_display }} - {{ student_profile.year|ordinal }} Year</span>
+

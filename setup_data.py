@@ -11,30 +11,13 @@ import django
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'campus_project.settings')
 django.setup()
 
-from campus_app.models import User, Department, Resource
+from campus_app.models import User, Resource
 
 def create_sample_data():
     print("Creating sample data for Campus Resource Management System\n")
     
-    # Create Departments
-    print("Creating Departments...")
-    departments = [
-        {'name': 'Computer Science Engineering', 'code': 'CSE'},
-        {'name': 'Artificial Intelligence & ML', 'code': 'AIML'},
-        {'name': 'Electronics & Communication', 'code': 'ECE'},
-        {'name': 'Mechanical Engineering', 'code': 'MECH'},
-        {'name': 'Civil Engineering', 'code': 'CIVIL'},
-    ]
-    
-    for dept_data in departments:
-        dept, created = Department.objects.get_or_create(
-            code=dept_data['code'],
-            defaults={'name': dept_data['name']}
-        )
-        if created:
-            print(f"  + Created: {dept.name} ({dept.code})")
-        else:
-            print(f"  - Already exists: {dept.name}")
+    # Departments are defined in models.py as TextChoices, so no need to create them in DB.
+    print("Departments are defined as Enums in models.py. Skipping table creation.")
     
     # Create Resources
     print("\nCreating Resources...")

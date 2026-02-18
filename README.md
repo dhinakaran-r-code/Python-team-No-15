@@ -1,92 +1,135 @@
-# Campus Resource Management System
+# 🎓 Campus Resource Management System
 
-A Django-based system for managing campus resources, built for Hackathons.
+A comprehensive, role-based web application for managing university resources (labs, halls, classrooms) with a multi-level approval workflow. Built with **Django 5**, **MySQL**, and **Bootstrap 5**.
 
-## Features
-- **User Roles**: Admin, Staff, Student.
-- **Resource Management**: Labs, Classrooms, Halls (CRUD by Admin).
-- **Booking System**: Student requests, Staff approvals, Double-booking prevention.
-- **Dashboards**: Role-specific dashboards with status tracking.
+---
 
-## Prerequisites
-- Python 3.8+
-- PostgreSQL (Supabase) or SQLite (for local dev)
+## 🚀 Key Features
 
-## Setup Instructions
+### 👥 User Roles & Hierarchy
+*   **Admin**: Full system control, manages resources, users, and final approvals.
+*   **Staff (Faculty Advisor)**: Approves student requests from their department/year and can book resources directly.
+*   **Class Representative**: First line of approval for student requests within their class.
+*   **Student**: Can request resources, view status, and see their class dashboard.
 
-1.  **Clone Requirements**
-    ```bash
-    git clone <repository_url>
-    cd campus_project
-    ```
+### 🔄 Intelligent Workflows
+1.  **Student Booking**: Student Request → Class Rep Approval → Faculty Advisor Approval → Admin Final Approval.
+2.  **Staff Booking**: Staff Request → Auto-approved at Dept Level → Admin Final Approval.
+3.  **Admin Booking**: Instant global booking (rejects all conflicting requests).
 
-2.  **Create Virtual Environment**
-    ```bash
-    python -m venv venv
-    # Windows
-    venv\Scripts\activate
-    # Linux/Mac
-    source venv/bin/activate
-    ```
+### ⚡ Modern UI/UX
+*   **Premium Dashboard Designs**: Glassmorphism effects, stat cards, and gradient themes.
+*   **Dynamic status tracking**: Live status updates (Pending Rep, Pending Staff, Staff Approved, Approved).
+*   **Responsive**: Fully functional on mobile and desktop.
 
-3.  **Install Dependencies**
-    ```bash
-    pip install -r requirements.txt
-    ```
+---
 
-4.  **Environment Variables**
-    Create a `.env` file in the root directory:
-    ```env
-    DEBUG=True
-    SECRET_KEY=your-secret-key
-    # For Local Development (SQLite):
-    DATABASE_URL=sqlite:///db.sqlite3
-    # For Production (Supabase):
-    # DATABASE_URL=postgres://user:password@host:port/dbname
-    ```
+## 🛠️ Technology Stack
+*   **Backend**: Django 5.0 (Python)
+*   **Database**: MySQL (Production-ready)
+*   **Frontend**: HTML5, Bootstrap 5, Custom CSS
+*   **Authentication**: Custom User Model with Role-Based Access Control (RBAC)
 
-5.  **Apply Migrations**
-    ```bash
-    python manage.py migrate
-    ```
+---
 
-6.  **Create Superuser (Admin)**
-    ```bash
-    python manage.py createsuperuser
-    ```
+## ⚙️ Setup Instructions
 
-7.  **Run Server**
-    ```bash
-    python manage.py runserver
-    ```
+### 1. Requirements
+*   Python 3.10+
+*   MySQL Server
 
-## Usage Guide
+### 2. Installation
+```bash
+# Clone the repository
+git clone <your-repo-url>
+cd campus_project
 
-### 1. Admin Setup
-- Go to `http://127.0.0.1:8000/admin/`.
-- Login with superuser credentials.
-- Create **Resources** (e.g., "Computer Lab 1", "Seminar Hall").
-- Create **Staff Users**:
-    - Create a user with Staff status.
-    - Create a **Staff Profile** for them linked to a department (e.g., CSE).
+# Create Virtual Environment
+python -m venv venv
+venv\Scripts\activate  # Windows
+# source venv/bin/activate  # Mac/Linux
 
-### 2. Student Registration
-- Go to `http://127.0.0.1:8000/register/`.
-- Register as a student (Select Department and Year).
-- You will be redirected to the Student Dashboard.
+# Install Dependencies
+pip install -r requirements.txt
+```
 
-### 3. Booking Flow
-- **Student**: Click "Book New Resource", select resource and time.
-- **Staff**: Login as staff of the same department. Approve/Reject the booking from the dashboard.
-- **Student**: Check dashboard for status update (Approved/Rejected).
+### 3. Database Configuration
+Create a `.env` file in the root directory:
+```env
+DEBUG=True
+SECRET_KEY=your-secure-secret-key-here
+# Update with your MySQL credentials:
+DATABASE_URL=mysql://root:YourPassword@localhost:3306/campus_db
+```
 
-## Project Structure
-- `campus_app/`: Core app logic (models, views, forms).
-- `templates/`: HTML templates with Bootstrap 5.
-- `static/`: Static assets.
+### 4. Database Setup
+```bash
+# Create Database (in MySQL Shell)
+CREATE DATABASE campus_db;
 
-## Deployment to Supabase
-1.  Get your Connection String from Supabase Settings -> Database.
-2.  Update `DATABASE_URL` in `.env`.
-3.  Run `python manage.py migrate` database is empty.
-4.  Deploys using standard Django deployment guides (Gunicorn/WhiteNoise included).
+# Run Migrations
+python manage.py migrate
+
+# Create Superuser (Admin)
+python manage.py createsuperuser
+```
+
+### 5. Run the Application
+```bash
+python manage.py runserver
+```
+Access the site at: `http://127.0.0.1:8000/`
+
+---
+
+## 📖 Usage Guide
+
+### 👨‍💼 Admin
+*   **Login**: Use the superuser account.
+*   **Dashboard**:
+    *   **Manage Resources**: Add Labs, Seminar Halls, Classrooms.
+    *   **Manage Users**: Add Staff and Students directly without admin panel.
+    *   **Approvals**: Review "Needs Final Approval" cards and Approve/Reject bookings.
+    *   **Bulk Booking**: Book a resource for multiple days at once.
+
+### 🧑‍🏫 Staff (Faculty Advisor)
+*   **Login**: Credentials provided by Admin.
+*   **Dashboard**:
+    *   **Approve Requests**: View and approve bookings from your department's students (after Rep approval).
+    *   **Book Resource**: Directly book a lab for your classes (skips Rep approval).
+
+### 👨‍🎓 Student & Class Rep
+*   **Login**: Register or use provided credentials.
+*   **Dashboard**:
+    *   **Book Resource**: Request a venue for an event.
+    *   **Class Rep Tasks**: If you are a Rep, you will see a "Class Requests" section to approve your classmates' bookings first.
+
+---
+
+## 📂 Project Structure
+```
+campus_project/
+├── campus_app/           # Core Application Logic
+│   ├── models.py         # Database Schema (User, Booking, Resource)
+│   ├── views.py          # Business Logic & Controllers
+│   ├── urls.py           # Route Definitions
+│   └── forms.py          # Form Validations
+├── templates/            # HTML Templates (Dashboards, Forms)
+├── static/               # CSS, JS, and Images
+├── campus_project/       # Project Settings
+├── requirements.txt      # Python Dependencies
+└── manage.py             # Django CLI
+```
+
+---
+
+## 🤝 Contributing
+1.  Fork the repository.
+2.  Create your feature branch (`git checkout -b feature/AmazingFeature`).
+3.  Commit your changes (`git commit -m 'Add some AmazingFeature'`).
+4.  Push to the branch (`git push origin feature/AmazingFeature`).
+5.  Open a Pull Request.
+
+---
+
+**Developed for Campus Resource Management** 🚀

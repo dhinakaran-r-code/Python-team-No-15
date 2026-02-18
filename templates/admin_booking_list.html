@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+
+{% block title %}Bookings - Admin Panel{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <h2>
+                {% if filter_status == 'PENDING' %}Pending Approvals
+                {% elif filter_status == 'STAFF_APPROVED' %}Pending Final Approval
+                {% elif filter_status == 'APPROVED' %}Approved Bookings
+                {% elif filter_status == 'REJECTED' %}Rejected Bookings
+                {% else %}All Bookings{% endif %}
+            </h2>
+        </div>
+        <div class="col-md-6 text-end">
+            <div class="btn-group" role="group">
+                <a href="?status=PENDING"
+                    class="btn btn-outline-secondary {% if filter_status == 'PENDING' %}active{% endif %}">Pending</a>
+                <a href="?status=STAFF_APPROVED"
+                    class="btn btn-outline-secondary {% if filter_status == 'STAFF_APPROVED' %}active{% endif %}">Staff
+                    Approved</a>
+                <a href="?status=APPROVED"
+                    class="btn btn-outline-secondary {% if filter_status == 'APPROVED' %}active{% endif %}">Approved</a>
+                <a href="?status=REJECTED"
+                    class="btn btn-outline-secondary {% if filter_status == 'REJECTED' %}active{% endif %}">Rejected</a>
+            </div>
+            <a href="{% url 'admin_dashboard' %}" class="btn btn-secondary ms-2">Back</a>
+        </div>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            {% if bookings %}
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Student</th>
+                            <th>Resource</th>
+                            <th>Date & Time</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for booking in bookings %}
+                        <tr>
+                            <td>
+                                <strong>{{ booking.user.username }}</strong><br>
+                                <small class="text-muted">{{ booking.user.student_profile.get_department_display
+                                    }}</small>
+                            </td>
+                            <td>{{ booking.resource.name }}</td>
+                            <td>
+                                {{ booking.booking_date }}<br>
+                                <small class="text-muted">{{ booking.start_time }} - {{ booking.end_time }}</small>
+                            </td>
+                            <td>
+                                {% if booking.status == 'APPROVED' %}
+                                <span class="badge bg-success">Approved</span>
+                                {% elif booking.status == 'STAFF_APPROVED' %}
+                                <span class="badge bg-info text-dark">Staff Approved</span>
+                                {% elif booking.status == 'REJECTED' %}
+                                <span class="badge bg-danger">Rejected</span>
+                                {% else %}
+                                <span class="badge bg-secondary">{{ booking.get_status_display }}</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if booking.status == 'STAFF_APPROVED' %}
+                                <a href="{% url 'approve_booking' booking.id %}"
+                                    class="btn btn-sm btn-success">Approve</a>
+                                <a href="{% url 'reject_booking' booking.id %}" class="btn btn-sm btn-danger">Reject</a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <p class="text-muted text-center py-4">No bookings found with this status.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
