@@ -1,6 +1,6 @@
 # 🎓 Campus Resource Management System
 
-A comprehensive, role-based web application for managing university resources (labs, halls, classrooms) with a multi-level approval workflow. Built with **Django 5**, **MySQL**, and **Bootstrap 5**.
+A comprehensive, role-based web application for managing university resources (labs, halls, classrooms) with a multi-level approval workflow. Built with **Django 5** and  **MySQL**.
 
 ---
 
@@ -27,7 +27,7 @@ A comprehensive, role-based web application for managing university resources (l
 ## 🛠️ Technology Stack
 *   **Backend**: Django 5.0 (Python)
 *   **Database**: MySQL (Production-ready)
-*   **Frontend**: HTML5, Bootstrap 5, Custom CSS
+*   **Frontend**: HTML5, Custom CSS
 *   **Authentication**: Custom User Model with Role-Based Access Control (RBAC)
 
 ---
